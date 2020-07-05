@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "179941289149",
+    "firebase_url": "https://virtualbid-b7651.firebaseio.com",
+    "project_id": "virtualbid-b7651",
+    "storage_bucket": "virtualbid-b7651.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:179941289149:android:4097a5101916db31d55bd4",
+        "android_client_info": {
+          "package_name": "co.juliandev.virtualbidapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "179941289149-200gsbc2l63s0jee71skaqfbrisbqgj5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "co.juliandev.virtualbidapp",
+            "certificate_hash": "fd8c0f130319e355fd711bde8dbe4855892bc7c8"
+          }
+        },
+        {
+          "client_id": "179941289149-49k27h95nbl3op7c8678699holgi58i4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCmzDw7zA8XQ8KqkA_YrTwExFEVUvge8gQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "179941289149-49k27h95nbl3op7c8678699holgi58i4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
