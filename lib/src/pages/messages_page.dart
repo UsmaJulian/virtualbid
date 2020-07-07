@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class MessagesPage extends StatefulWidget {
+  final args;
+
+  const MessagesPage({this.args});
   @override
   _MessagesPageState createState() => _MessagesPageState();
 }
@@ -38,7 +41,7 @@ class _MessagesPageState extends State<MessagesPage> {
           ),
         ),
       ),
-      body: Center(child: Text('Mensajes')),
+      body: Center(child: Text(widget.args)),
     );
   }
 }

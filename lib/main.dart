@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:provider/provider.dart';
 import 'package:virtualbidapp/src/pages/home_page.dart';
+
 import 'package:virtualbidapp/src/pages/signin_page.dart';
 
 import 'package:virtualbidapp/src/services/auth_service.dart';
@@ -10,11 +11,27 @@ import 'package:virtualbidapp/src/services/auth_service.dart';
 void main() {
   initializeDateFormatting().then((_) {
     WidgetsFlutterBinding.ensureInitialized();
+
     runApp(MyApp());
   });
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  @override
+  void initState() {
+    initPlatformState();
+    super.initState();
+  }
+
+  Future<void> initPlatformState() async {
+    if (!mounted) return;
+  }
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
@@ -44,6 +61,7 @@ class MyApp extends StatelessWidget {
                       style: TextStyle(
                         color: Color(0xff005549),
                         fontFamily: 'Roboto',
+                        fontSize: 25,
                         fontWeight: FontWeight.w700,
                       ),
                     ),
@@ -56,7 +74,9 @@ class MyApp extends StatelessWidget {
               ));
             case AuthStatus.Authenticated:
               return HomePage(
-                  userID: authService.user.id, userInfo: authService.user);
+                userID: authService.user.id,
+                userInfo: authService.user,
+              );
             case AuthStatus.Authenticating:
               return SignInPage();
             case AuthStatus.Unauthenticated:

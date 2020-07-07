@@ -6,6 +6,7 @@ import 'package:virtualbidapp/src/models/channel_model.dart';
 import 'package:virtualbidapp/src/models/video_model.dart';
 import 'package:virtualbidapp/src/pages/video_page.dart';
 import 'package:virtualbidapp/src/services/api_service.dart';
+import 'package:virtualbidapp/src/utilities/channelid_dart.dart';
 
 class VideosListPage extends StatefulWidget {
   final userID;
@@ -26,8 +27,7 @@ class _VideosListPageState extends State<VideosListPage> {
   }
 
   _initChannel() async {
-    Channel channel = await APIService.instance
-        .fetchChannel(channelId: 'UCClw5CWeEE90yBp3u0ahOeQ');
+    Channel channel = await APIService.instance.fetchChannel(channelId: Channel_Id);
     setState(() {
       _channel = channel;
     });

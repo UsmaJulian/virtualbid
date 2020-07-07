@@ -48,7 +48,7 @@ class _VideoScreenState extends State<LivePage> with AfterLayoutMixin {
 
   @override
   void dispose() {
-    _controller.dispose();
+    _controller?.dispose();
     super.dispose();
   }
 

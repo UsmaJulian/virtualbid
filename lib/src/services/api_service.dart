@@ -17,7 +17,7 @@ class APIService with ChangeNotifier {
 
   Future<Channel> fetchChannel({String channelId}) async {
     Map<String, String> parameters = {
-      'part': 'snippet, contentDetails, statistics',
+      'part': 'snippet,contentDetails,statistics',
       'id': channelId,
       'key': API_KEY,
     };

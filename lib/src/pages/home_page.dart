@@ -13,11 +13,18 @@ import 'package:virtualbidapp/src/pages/profile_page.dart';
 import 'package:virtualbidapp/src/pages/settings_page.dart';
 import 'package:virtualbidapp/src/pages/videosList_page.dart';
 import 'package:http/http.dart' as http;
+import 'package:virtualbidapp/src/providers/push_notifications_provider.dart';
+import 'package:virtualbidapp/src/utilities/channelid_dart.dart';
+import 'package:virtualbidapp/src/utilities/key.dart';
 
 class HomePage extends StatefulWidget {
   final userID;
   final userInfo;
-  const HomePage({@required this.userID, this.userInfo});
+
+  const HomePage({
+    @required this.userID,
+    this.userInfo,
+  });
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -28,9 +35,18 @@ class _HomePageState extends State<HomePage>
   TabController _tabController;
   String videoID;
   Stream<QuerySnapshot> stream;
-
+  String args;
   @override
   void initState() {
+    final pushProvider = PushNotificationProvider();
+    pushProvider.initNotifications();
+    pushProvider.messages.listen((data) {
+      print('Argumento de la notificación');
+      print(data);
+      setState(() {
+        args = data;
+      });
+    });
     _tabController = new TabController(
       length: 4,
       vsync: this,
@@ -47,8 +63,8 @@ class _HomePageState extends State<HomePage>
   }
 
   Future<int> fun() async {
-    final apiKey2 = 'AIzaSyB86cmQeva7zDg35KcNqwlHrB1FKUVJLRc';
-    final channelId = 'UCClw5CWeEE90yBp3u0ahOeQ';
+    final apiKey2 = API_KEY;
+    final channelId = Channel_Id;
     final response = await http.get(
         "https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=$channelId&eventType=live&type=video&key=$apiKey2");
     print(response.body);
@@ -57,11 +73,12 @@ class _HomePageState extends State<HomePage>
       final jsonData = jsonDecode(response.body);
       Map<dynamic, dynamic> mapDatos = jsonData;
       // print('videoId: ${mapDatos['items'][0]['id']['videoId']}');
-      setState(() {
-        if (mapDatos['items'] != null) {
-          // videoID = '${mapDatos['items'][0]['id']['videoId']}';
-        }
-      });
+      if (mapDatos['items'] != null && mapDatos['items'].isNotEmpty) {
+        setState(() {
+          videoID = '${mapDatos['items'][0]['id']['videoId']}';
+        });
+      }
+
       return response.statusCode;
     } else {
       throw Exception('Failed to load');
@@ -314,7 +331,9 @@ class _HomePageState extends State<HomePage>
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => MessagesPage()));
+                                      builder: (context) => MessagesPage(
+                                            args: args,
+                                          )));
                             },
                           ),
                           Center(

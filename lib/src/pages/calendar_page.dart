@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:virtualbidapp/src/models/event_model.dart';
-import 'package:virtualbidapp/src/models/user_model.dart';
 
 import 'package:virtualbidapp/src/pages/add_event_page.dart';
+import 'package:virtualbidapp/src/pages/register_page.dart';
 
 import 'package:virtualbidapp/src/services/event_firestore_service.dart';
 
@@ -157,10 +157,17 @@ class _CalendarPageState extends State<CalendarPage> {
                                   ),
                                   FlatButton(
                                     onPressed: () {
-                                      _registerEvent(
-                                          usuario: widget.userInfo,
-                                          event_date: event.eventDate,
-                                          title: event.title);
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  RegisterPage(
+                                                    userID: widget.userID,
+                                                    userInfo: widget.userInfo,
+                                                    eventDate: event.eventDate,
+                                                    eventTitle: event.title,
+                                                  )));
+                                      Navigator.pop(context);
                                     },
                                     child: Text(
                                       'Registrarme',
@@ -197,42 +204,6 @@ class _CalendarPageState extends State<CalendarPage> {
       'title': title,
       'description': description,
       'event_date': event_date,
-    });
-  }
-
-  _registerEvent({User usuario, DateTime event_date, String title}) {
-    return Firestore.instance
-        .collection('paddles')
-        .document('registered')
-        .updateData({
-      'users': FieldValue.arrayUnion([usuario.displayName])
-    }).then((value) {
-      Navigator.pop(context, true);
-      showDialog(
-          context: context,
-          builder: (context) {
-            var month = DateFormat.MMMM('es').format(event_date);
-            return AlertDialog(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(16.0)),
-              ),
-              title: Text('Evento para el día: ${event_date.day} de $month'),
-              actions: [
-                FlatButton(
-                  onPressed: () {
-                    Navigator.pop(context, true);
-                  },
-                  child: Text(
-                    'Aceptar',
-                    style: TextStyle(
-                      color: Color(0xff005549),
-                    ),
-                  ),
-                )
-              ],
-              content: Text(title),
-            );
-          });
     });
   }
 }
