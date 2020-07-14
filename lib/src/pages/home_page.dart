@@ -1,9 +1,15 @@
+import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:uuid/uuid.dart';
+import 'package:virtualbidapp/src/pages/add_event_page.dart';
 import 'package:virtualbidapp/src/pages/archive_page.dart';
 import 'package:virtualbidapp/src/pages/calendar_page.dart';
 import 'package:virtualbidapp/src/pages/favorites_page.dart';
@@ -16,6 +22,7 @@ import 'package:http/http.dart' as http;
 import 'package:virtualbidapp/src/providers/push_notifications_provider.dart';
 import 'package:virtualbidapp/src/utilities/channelid_dart.dart';
 import 'package:virtualbidapp/src/utilities/key.dart';
+import 'package:virtualbidapp/src/widgets/show_dialog.dart';
 
 class HomePage extends StatefulWidget {
   final userID;
@@ -36,6 +43,8 @@ class _HomePageState extends State<HomePage>
   String videoID;
   Stream<QuerySnapshot> stream;
   String args;
+  File _avatarImage;
+  final picker = ImagePicker();
   @override
   void initState() {
     final pushProvider = PushNotificationProvider();
@@ -203,7 +212,7 @@ class _HomePageState extends State<HomePage>
                                           MediaQuery.of(context).size.height *
                                               0.25,
                                       margin:
-                                          EdgeInsets.symmetric(vertical: 30),
+                                          EdgeInsets.symmetric(vertical: 25),
                                       padding: EdgeInsets.all(3),
                                       decoration: BoxDecoration(
                                           border: Border.all(
@@ -211,19 +220,87 @@ class _HomePageState extends State<HomePage>
                                           borderRadius:
                                               BorderRadius.circular(300)),
                                       child: Center(
-                                        child: ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(300),
-                                          child: FadeInImage(
-                                            placeholder: AssetImage(
-                                                'assets/img/no_profile_img.png'),
-                                            image: NetworkImage(
-                                              snapshot.data
-                                                  .documents[index]['photoURL']
-                                                  .toString(),
+                                        child: Stack(
+                                          children: [
+                                            ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(300),
+                                              child: FadeInImage(
+                                                placeholder: AssetImage(
+                                                    'assets/img/no_profile_img.png'),
+                                                image: NetworkImage(
+                                                  snapshot
+                                                      .data
+                                                      .documents[index]
+                                                          ['photoURL']
+                                                      .toString(),
+                                                ),
+                                                fit: BoxFit.cover,
+                                              ),
                                             ),
-                                            fit: BoxFit.cover,
-                                          ),
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 48.0, top: 60),
+                                              child: IconButton(
+                                                  icon: Icon(
+                                                    FontAwesomeIcons.camera,
+                                                    color: Color(0xff005549),
+                                                  ),
+                                                  onPressed: () async {
+                                                    final pickedFileAvatar =
+                                                        await picker.getImage(
+                                                            source: ImageSource
+                                                                .gallery);
+                                                    setState(() {
+                                                      _avatarImage = File(
+                                                          pickedFileAvatar
+                                                              .path);
+                                                    });
+                                                    if (_avatarImage != null) {
+                                                      var imageAvatar =
+                                                          Uuid().v1();
+                                                      var imageAvatarPath =
+                                                          '/user/avatar/${widget.userID}/$imageAvatar.jpg';
+                                                      final StorageReference
+                                                          storageReference =
+                                                          FirebaseStorage()
+                                                              .ref()
+                                                              .child(
+                                                                  imageAvatarPath);
+                                                      final StorageUploadTask
+                                                          uploadTask =
+                                                          storageReference
+                                                              .putFile(
+                                                                  _avatarImage);
+                                                      final StreamSubscription<
+                                                              StorageTaskEvent>
+                                                          streamSubscription =
+                                                          uploadTask.events
+                                                              .listen((event) {
+                                                        print(
+                                                            'EVENT ${event.type}');
+                                                      });
+                                                      await uploadTask
+                                                          .onComplete;
+                                                      streamSubscription
+                                                          .cancel();
+                                                      Firestore.instance
+                                                          .collection('users')
+                                                          .document(
+                                                              widget.userID)
+                                                          .updateData({
+                                                        "photoURL":
+                                                            (await storageReference
+                                                                    .getDownloadURL())
+                                                                .toString()
+                                                      });
+                                                    } else {
+                                                      showdialogVisitados(
+                                                          context);
+                                                    }
+                                                  }),
+                                            ),
+                                          ],
                                         ),
                                       ),
                                     ),
@@ -343,6 +420,40 @@ class _HomePageState extends State<HomePage>
                               width: MediaQuery.of(context).size.width * 0.7,
                             ),
                           ),
+                          if (snapshot.data.documents[index]['role'] == 'Admin')
+                            Column(
+                              children: <Widget>[
+                                ListTile(
+                                  contentPadding: EdgeInsets.all(18.0),
+                                  leading: Icon(
+                                    FontAwesomeIcons.plus,
+                                    color: Color(0xff048374),
+                                  ),
+                                  title: Text(
+                                    'Agregar evento',
+                                    style: TextStyle(
+                                      fontFamily: 'Roboto',
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  ),
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                AddEventPage()));
+                                  },
+                                ),
+                                Center(
+                                  child: Container(
+                                    color: Colors.black38,
+                                    height: 1,
+                                    width:
+                                        MediaQuery.of(context).size.width * 0.7,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ListTile(
                             contentPadding: EdgeInsets.all(18.0),
                             leading: Icon(
@@ -362,6 +473,13 @@ class _HomePageState extends State<HomePage>
                                   MaterialPageRoute(
                                       builder: (context) => SettingsPage()));
                             },
+                          ),
+                          Center(
+                            child: Container(
+                              color: Colors.black38,
+                              height: 1,
+                              width: MediaQuery.of(context).size.width * 0.7,
+                            ),
                           ),
                         ],
                       );

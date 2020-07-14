@@ -1,6 +1,8 @@
 import 'package:app_settings/app_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:virtualbidapp/src/pages/signin_page.dart';
+import 'package:virtualbidapp/src/services/auth_service.dart';
 
 class SettingsPage extends StatefulWidget {
   @override
@@ -164,6 +166,22 @@ class _SettingsPageState extends State<SettingsPage> {
           },
         ),
       ),
+      ButtonTheme(
+        buttonColor: Color(0xff005549),
+        minWidth: 160,
+        height: 40,
+        child: RaisedButton(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20.0),
+            ),
+            child: Text(
+              'Salir',
+              style: TextStyle(color: Colors.white),
+            ),
+            onPressed: () {
+              _signOut();
+            }),
+      )
     ]);
 
     return actionItems;
@@ -173,5 +191,16 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   void dispose() {
     super.dispose();
+  }
+
+  void _signOut() async {
+    AuthService authService = AuthService.instance();
+    Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => SignInPage()),
+        (route) => false);
+    try {
+      await authService.signOut();
+    } catch (e) {}
   }
 }

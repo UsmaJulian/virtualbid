@@ -10,6 +10,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
 import 'package:virtualbidapp/src/models/user_model.dart';
+import 'package:virtualbidapp/src/widgets/show_dialog.dart';
 
 class RegisterPage extends StatefulWidget {
   final userID;
@@ -582,6 +583,8 @@ class _RegisterPageState extends State<RegisterPage> {
                                                         .getDownloadURL())
                                                     .toString()
                                           });
+                                        } else {
+                                          showdialogVisitados(context);
                                         }
                                         if (_imageRut != null) {
                                           var imageRutName = Uuid().v1();
@@ -614,6 +617,8 @@ class _RegisterPageState extends State<RegisterPage> {
                                                     .getDownloadURL())
                                                 .toString()
                                           });
+                                        } else {
+                                          showdialogVisitados(context);
                                         }
                                         if (_imagePay != null) {
                                           var imagePayName = Uuid().v1();
@@ -646,6 +651,8 @@ class _RegisterPageState extends State<RegisterPage> {
                                                     .getDownloadURL())
                                                 .toString()
                                           });
+                                        } else {
+                                          showdialogVisitados(context);
                                         }
                                         _registerEvent(
                                             usuario: widget.userInfo,

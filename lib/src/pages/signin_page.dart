@@ -3,6 +3,7 @@ import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 import 'package:provider/provider.dart';
 import 'package:virtualbidapp/src/pages/signinup_page.dart';
 import 'package:virtualbidapp/src/services/auth_service.dart';
+import 'package:virtualbidapp/src/pages/password_renew.dart';
 
 class SignInPage extends StatefulWidget {
   @override
@@ -71,7 +72,11 @@ class _SignInPageState extends State<SignInPage> {
           crossAxisAlignment: CrossAxisAlignment.end,
           children: <Widget>[
             FlatButton(
-                onPressed: () {}, child: Text('Olvidaste tu contraseña?')),
+                onPressed: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => PasswordRenew()));
+                },
+                child: Text('Olvidaste tu contraseña?')),
             Row(
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.end,

@@ -108,7 +108,7 @@ class AuthService with ChangeNotifier {
     }
   }
 
-  void signOut() {
+  signOut() {
     _auth.signOut();
     _status = AuthStatus.Unauthenticated;
     notifyListeners();

@@ -187,10 +187,6 @@ class _CalendarPageState extends State<CalendarPage> {
               ),
             );
           }),
-      floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.add),
-          onPressed: () => Navigator.push(context,
-              MaterialPageRoute(builder: (context) => AddEventPage()))),
     );
   }
 
