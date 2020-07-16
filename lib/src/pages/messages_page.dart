@@ -41,7 +41,10 @@ class _MessagesPageState extends State<MessagesPage> {
           ),
         ),
       ),
-      body: Center(child: Text(widget.args)),
+      body: Center(
+          child: widget.args != null
+              ? Text(widget.args)
+              : Text('No tienes mensajes')),
     );
   }
 }

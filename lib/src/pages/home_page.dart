@@ -14,6 +14,7 @@ import 'package:virtualbidapp/src/pages/archive_page.dart';
 import 'package:virtualbidapp/src/pages/calendar_page.dart';
 import 'package:virtualbidapp/src/pages/favorites_page.dart';
 import 'package:virtualbidapp/src/pages/live_page.dart';
+import 'package:virtualbidapp/src/pages/manage_streaming_page.dart';
 import 'package:virtualbidapp/src/pages/messages_page.dart';
 import 'package:virtualbidapp/src/pages/profile_page.dart';
 import 'package:virtualbidapp/src/pages/settings_page.dart';
@@ -442,6 +443,35 @@ class _HomePageState extends State<HomePage>
                                         MaterialPageRoute(
                                             builder: (context) =>
                                                 AddEventPage()));
+                                  },
+                                ),
+                                Center(
+                                  child: Container(
+                                    color: Colors.black38,
+                                    height: 1,
+                                    width:
+                                        MediaQuery.of(context).size.width * 0.7,
+                                  ),
+                                ),
+                                ListTile(
+                                  contentPadding: EdgeInsets.all(18.0),
+                                  leading: Icon(
+                                    FontAwesomeIcons.stream,
+                                    color: Color(0xff048374),
+                                  ),
+                                  title: Text(
+                                    'Administrar evento',
+                                    style: TextStyle(
+                                      fontFamily: 'Roboto',
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  ),
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                ManageStream()));
                                   },
                                 ),
                                 Center(

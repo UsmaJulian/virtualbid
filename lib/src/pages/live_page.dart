@@ -25,7 +25,7 @@ class _VideoScreenState extends State<LivePage> with AfterLayoutMixin {
   void initState() {
     super.initState();
     setState(() {
-      _initialVideoId = widget.id;
+      _initialVideoId = widget.id ;
     });
   }
 
@@ -60,89 +60,94 @@ class _VideoScreenState extends State<LivePage> with AfterLayoutMixin {
           ? StreamBuilder(
               stream: Firestore.instance.collection('valuesbid').snapshots(),
               builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                return ListView.builder(
-                  physics: NeverScrollableScrollPhysics(),
-                  itemCount: snapshot.data.documents.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return Container(
-                      width: MediaQuery.of(context).size.width,
-                      height: MediaQuery.of(context).size.height * 0.9,
-                      child: Column(
-                        children: <Widget>[
-//                          Container(
-//                              width: double.infinity,
-//                              height: 250,
-//                              color: Colors.black),
-                          YoutubePlayer(
-                            controller: _controller,
-                            showVideoProgressIndicator: true,
-                          ),
-                          Container(
-                            padding: EdgeInsets.symmetric(vertical: 8.0),
-                            child: Text('Título del Streaming',
-                                style: TextStyle(
-                                  fontFamily: 'Roboto',
-                                  fontWeight: FontWeight.w700,
-                                  color: Color(0xff005549),
-                                )),
-                          ),
-                          Container(
-                            padding: EdgeInsets.symmetric(
-                                vertical: 8.0, horizontal: 8.0),
-                            child: Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text('Descripción del Streaming',
+                if (!snapshot.hasData || snapshot.data?.documents == null) {
+                  return Center(child: CupertinoActivityIndicator());
+                } else {
+                  return ListView.builder(
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: snapshot.data.documents.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: MediaQuery.of(context).size.height * 0.9,
+                        child: Column(
+                          children: <Widget>[
+//                            Container(
+//                                width: double.infinity,
+//                                height: 250,
+//                                color: Colors.black),
+                             YoutubePlayer(
+                               controller: _controller,
+                               showVideoProgressIndicator: true,
+                             ),
+                            Container(
+                              padding: EdgeInsets.symmetric(vertical: 8.0),
+                              child: Text('Título del Streaming',
                                   style: TextStyle(
                                     fontFamily: 'Roboto',
-                                    fontWeight: FontWeight.w400,
+                                    fontWeight: FontWeight.w700,
+                                    color: Color(0xff005549),
                                   )),
                             ),
-                          ),
-
-                          Container(
-                            padding: EdgeInsets.only(top: 240.0),
-                            child: ButtonTheme(
-                              buttonColor: Color(0xff005549),
-                              minWidth: 260,
-                              height: 40,
-                              child: RaisedButton(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20.0),
-                                  ),
-                                  child: Text(
-                                    'Ofertar',
+                            Container(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 8.0, horizontal: 8.0),
+                              child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text('Descripción del Streaming',
                                     style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w400),
-                                  ),
-                                  onPressed: () {
-                                    _widgetOfertas(
-                                        context: context,
-                                        userInfo: widget.userInfo,
-                                        documentFields: snapshot
-                                            .data.documents[index]['value']
-                                            .toString());
-                                  }),
+                                      fontFamily: 'Roboto',
+                                      fontWeight: FontWeight.w400,
+                                    )),
+                              ),
                             ),
-                          ),
-                          Container(
-                            padding: EdgeInsets.symmetric(vertical: 18.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: <Widget>[
-                                Text('Oferta Actual:'),
-                                Text(
-                                  '\$ ${snapshot.data.documents[index]['value']}',
-                                  style: TextStyle(color: Color(0xff88ba25)),
-                                )
-                              ],
+
+                            Container(
+                              padding: EdgeInsets.only(top: 160.0),
+                              child: ButtonTheme(
+                                buttonColor: Color(0xff005549),
+                                minWidth: 260,
+                                height: 40,
+                                child: RaisedButton(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20.0),
+                                    ),
+                                    child: Text(
+                                      'Ofertar',
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w400),
+                                    ),
+                                    onPressed: () {
+                                      _widgetOfertas(
+                                          context: context,
+                                          userInfo: widget.userInfo,
+                                          documentFields: snapshot
+                                              .data.documents[index]['value']
+                                              .toString());
+                                    }),
+                              ),
                             ),
-                          )
-                        ],
-                      ),
-                    );
-                  },
-                );
+                            Container(
+                              padding: EdgeInsets.symmetric(vertical: 18.0),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: <Widget>[
+                                  Text('Oferta Actual:'),
+                                  Text(
+                                    '\$ ${snapshot.data.documents[index]['value']}',
+                                    style: TextStyle(color: Color(0xff88ba25)),
+                                  )
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                      );
+                    },
+                  );
+                }
               })
           : Center(
               child: Padding(
@@ -196,7 +201,21 @@ class _VideoScreenState extends State<LivePage> with AfterLayoutMixin {
                           ),
                         ),
                         FlatButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Firestore.instance
+                                .collection('offers')
+                                .document('${widget.userInfo.id}')
+                                .setData(
+                              {
+                                "displayName": widget.userInfo.displayName,
+                                "offer": documentFields,
+                                "offerTime": DateTime.now(),
+                                "paddle": paddle.toString(),
+                                "uid": widget.userInfo.id
+                              },
+                            );
+                            Navigator.pop(context);
+                          },
                           child: Text(
                             'Ofertar',
                             style: TextStyle(
@@ -220,9 +239,12 @@ class _VideoScreenState extends State<LivePage> with AfterLayoutMixin {
               },
             );
           }
-          return AlertDialog(
-            title: new Text("Alert Dialog title"),
-            content: new Text("Alert Dialog body"),
+          return AlertDialog( shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(
+                Radius.circular(16.0)),
+          ),
+            title: new Text("No te encuentras Registrado"),
+            content: new Text("Por favor registrate para ofertar "),
             actions: <Widget>[
               // usually buttons at the bottom of the dialog
               new FlatButton(

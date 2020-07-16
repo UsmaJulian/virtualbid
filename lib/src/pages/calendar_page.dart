@@ -3,10 +3,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+
 import 'package:table_calendar/table_calendar.dart';
 import 'package:virtualbidapp/src/models/event_model.dart';
+import 'package:virtualbidapp/src/pages/more_info_page.dart';
 
-import 'package:virtualbidapp/src/pages/add_event_page.dart';
 import 'package:virtualbidapp/src/pages/register_page.dart';
 
 import 'package:virtualbidapp/src/services/event_firestore_service.dart';
@@ -16,6 +17,7 @@ class CalendarPage extends StatefulWidget {
   final userInfo;
 
   const CalendarPage({@required this.userID, this.userInfo});
+
   @override
   _CalendarPageState createState() => _CalendarPageState();
 }
@@ -115,72 +117,107 @@ class _CalendarPageState extends State<CalendarPage> {
                       ),
                       calendarController: _controller,
                     ),
-                    ..._selectedEvents.map((event) => ListTile(
-                          title: Text(
-                            event.title,
-                            style: TextStyle(color: Colors.black),
-                          ),
-                          onTap: () {
-                            var fecha =
-                                DateFormat.yMMMMd('es').format(event.eventDate);
-                            showDialog(
-                              context: context,
-                              builder: (context) => AlertDialog(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(16.0)),
-                                ),
-                                title: Text('Evento para el día: $fecha'),
-                                actions: [
-                                  FlatButton(
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                    },
-                                    child: Text(
-                                      'Cancelar',
-                                      style: TextStyle(color: Colors.red),
-                                    ),
-                                  ),
-                                  FlatButton(
-                                    onPressed: () {
-                                      _saveDate(
-                                          title: event.title,
-                                          description: event.description,
-                                          event_date: event.eventDate);
-                                      Navigator.pop(context);
-                                    },
-                                    child: Text(
-                                      'Guardar',
-                                      style:
-                                          TextStyle(color: Color(0xff568a00)),
-                                    ),
-                                  ),
-                                  FlatButton(
-                                    onPressed: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  RegisterPage(
-                                                    userID: widget.userID,
-                                                    userInfo: widget.userInfo,
-                                                    eventDate: event.eventDate,
-                                                    eventTitle: event.title,
-                                                  )));
-                                      Navigator.pop(context);
-                                    },
-                                    child: Text(
-                                      'Registrarme',
-                                      style: TextStyle(
-                                        color: Color(0xff005549),
-                                      ),
-                                    ),
-                                  )
-                                ],
-                                content: Text(event.description),
+                    ..._selectedEvents.map((event) => Column(
+                          children: <Widget>[
+                            ListTile(
+                              leading: Image.network(event.imageEvent),
+                              title: Text(
+                                event.title,
+                                style: TextStyle(color: Colors.black),
                               ),
-                            );
-                          },
+                              onTap: () {
+                                var fecha = DateFormat.yMMMMd('es')
+                                    .format(event.eventDate);
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => AlertDialog(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(16.0)),
+                                    ),
+                                    title: Text('Evento para el día: $fecha'),
+                                    actions: [
+                                      FlatButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: Text(
+                                          'Cancelar',
+                                          style: TextStyle(color: Colors.red),
+                                        ),
+                                      ),
+                                      FlatButton(
+                                        onPressed: () {
+                                          _saveDate(
+                                              title: event.title,
+                                              description: event.description,
+                                              event_date: event.eventDate);
+                                          Navigator.pop(context);
+                                        },
+                                        child: Text(
+                                          'Guardar',
+                                          style: TextStyle(
+                                              color: Color(0xff568a00)),
+                                        ),
+                                      ),
+                                      FlatButton(
+                                        onPressed: () {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      RegisterPage(
+                                                        userID: widget.userID,
+                                                        userInfo:
+                                                            widget.userInfo,
+                                                        eventDate:
+                                                            event.eventDate,
+                                                        eventTitle: event.title,
+                                                      )));
+                                          Navigator.pop(context);
+                                        },
+                                        child: Text(
+                                          'Registro',
+                                          style: TextStyle(
+                                            color: Color(0xff005549),
+                                          ),
+                                        ),
+                                      )
+                                    ],
+                                    content: Text(event.description),
+                                  ),
+                                );
+                              },
+                            ),
+                            Column(
+                              children: <Widget>[
+                                ButtonTheme(
+                                  buttonColor: Color(0xff005549),
+                                  minWidth: 160,
+                                  height: 40,
+                                  child: RaisedButton(
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(20.0),
+                                      ),
+                                      child: Text(
+                                        "Cargar pdf",
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                      onPressed: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    MoreInfoPage(
+                                                      url: event.pdfUrl,
+                                                      userID: widget.userID,
+                                                    )));
+                                      }),
+                                ),
+                              ],
+                            ),
+                          ],
                         )),
                   ],
                 ),
