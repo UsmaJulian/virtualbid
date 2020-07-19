@@ -162,6 +162,7 @@ class _CalendarPageState extends State<CalendarPage> {
                                       ),
                                       FlatButton(
                                         onPressed: () {
+                                          print('tap');
                                           Navigator.push(
                                               context,
                                               MaterialPageRoute(
@@ -174,10 +175,10 @@ class _CalendarPageState extends State<CalendarPage> {
                                                             event.eventDate,
                                                         eventTitle: event.title,
                                                       )));
-                                          Navigator.pop(context);
+
                                         },
                                         child: Text(
-                                          'Registro',
+                                          'Registrarse',
                                           style: TextStyle(
                                             color: Color(0xff005549),
                                           ),
