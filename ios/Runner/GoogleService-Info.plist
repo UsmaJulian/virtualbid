@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>179941289149-dihqrugdq62n544o71a968a86j764tc4.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.179941289149-dihqrugdq62n544o71a968a86j764tc4</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>179941289149-l0h3oh0ho5t08qls5jqhq0t40cimiq2m.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyBbBQ5A8Tr9089BVNBUQdATrPKupnDCJy8</string>
+	<key>GCM_SENDER_ID</key>
+	<string>179941289149</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>co.juliandev.virtualbidapp</string>
+	<key>PROJECT_ID</key>
+	<string>virtualbid-b7651</string>
+	<key>STORAGE_BUCKET</key>
+	<string>virtualbid-b7651.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:179941289149:ios:faaea3ad718e4749d55bd4</string>
+	<key>DATABASE_URL</key>
+	<string>https://virtualbid-b7651.firebaseio.com</string>
+</dict>
+</plist>
