@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -56,10 +57,14 @@ class _ArchivePageState extends State<ArchivePage> {
                             snapshot.data.documents[index]['title'],
                           ),
                           Container(
-                            padding: EdgeInsets.all(10.0),
-                            child: Text(
-                              snapshot.data.documents[index]['description'],
+                            padding: EdgeInsets.all(5.0),
+                            child: AutoSizeText(
+                              '${snapshot.data.documents[index]['description']}',
+                              minFontSize: 14,
+                              maxLines: 4,
                               overflow: TextOverflow.ellipsis,
+
+
                             ),
                           ),
                         ],

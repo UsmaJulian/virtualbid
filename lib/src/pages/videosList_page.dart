@@ -7,6 +7,7 @@ import 'package:virtualbidapp/src/models/video_model.dart';
 import 'package:virtualbidapp/src/pages/video_page.dart';
 import 'package:virtualbidapp/src/services/api_service.dart';
 import 'package:virtualbidapp/src/utilities/channelid_dart.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
 class VideosListPage extends StatefulWidget {
   final userID;
@@ -101,7 +102,7 @@ class _VideosListPageState extends State<VideosListPage> {
             ),
           ),
           child: Container(
-            margin: EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
+            margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
             padding: EdgeInsets.all(10.0),
             height: 140.0,
             decoration: BoxDecoration(
@@ -128,25 +129,27 @@ class _VideosListPageState extends State<VideosListPage> {
                   children: <Widget>[
                     Container(
                       width: 160,
-                      child: Text(
+                      child: AutoSizeText(
+
                         'Titulo: ' + video.title,
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 16.0,
-                        ),
+                        minFontSize: 18,
+                        maxLines: 4,
                         overflow: TextOverflow.ellipsis,
+                        style: TextStyle(color: Colors.black),
                       ),
                     ),
                     Container(
                       width: 160,
-                      child: Text(
+                      child: AutoSizeText(
                         'Descripción: ' + video.description,
-                        softWrap: false,
+                        minFontSize: 14,
+                        maxLines: 4,
+                        overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                           color: Color(0xff005549),
-                          fontSize: 14.0,
+
                         ),
-                        overflow: TextOverflow.ellipsis,
+
                       ),
                     ),
                   ],
