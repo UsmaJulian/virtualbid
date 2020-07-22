@@ -46,28 +46,33 @@ class _ArchivePageState extends State<ArchivePage> {
                       Container(
                         child: Column(
                           children: <Widget>[
-                            Text(day.toString()),
+                            Text(day.toString(),style: TextStyle(color: Color(0xff88ba25)),),
                             Text(month.toString())
                           ],
                         ),
                       ),
-                      Column(
-                        children: <Widget>[
-                          Text(
-                            snapshot.data.documents[index]['title'],
-                          ),
-                          Container(
-                            padding: EdgeInsets.all(5.0),
-                            child: AutoSizeText(
-                              '${snapshot.data.documents[index]['description']}',
+                      Container(width: MediaQuery.of(context).size.width*0.8,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            AutoSizeText(
+                             '${ snapshot.data.documents[index]['title']}',
                               minFontSize: 14,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle( color: Color(0xff048374),),
+                            ),
+                            SizedBox(height: 10,),
+                            AutoSizeText(
+                              '${snapshot.data.documents[index]['description']}',
+                              minFontSize: 12,
                               maxLines: 4,
                               overflow: TextOverflow.ellipsis,
 
 
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ],
                   ),

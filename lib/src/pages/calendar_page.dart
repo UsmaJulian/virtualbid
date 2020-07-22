@@ -118,7 +118,12 @@ class _CalendarPageState extends State<CalendarPage> {
                       calendarController: _controller,
                     ),
                     ..._selectedEvents.map((event) => Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.all(20.0),
+                              child: Center(child: Text('Toca el evento para guardar o registrarse.'),),
+                            ),
                             ListTile(
                               leading: Image.network(event.imageEvent),
                               title: Text(

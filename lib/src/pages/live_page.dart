@@ -10,8 +10,10 @@ import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 class LivePage extends StatefulWidget {
   final String id;
   final userInfo;
+  final String title;
+  final String descr;
 
-  const LivePage({this.id, this.userInfo});
+  const LivePage({this.id, this.userInfo, this.title, this.descr});
 
   @override
   _VideoScreenState createState() => _VideoScreenState();
@@ -82,7 +84,7 @@ class _VideoScreenState extends State<LivePage> with AfterLayoutMixin {
                              ),
                             Container(
                               padding: EdgeInsets.symmetric(vertical: 8.0),
-                              child: Text('Título del Streaming',
+                              child: Text(widget.title??'',
                                   style: TextStyle(
                                     fontFamily: 'Roboto',
                                     fontWeight: FontWeight.w700,
@@ -94,7 +96,7 @@ class _VideoScreenState extends State<LivePage> with AfterLayoutMixin {
                                   vertical: 8.0, horizontal: 8.0),
                               child: Align(
                                 alignment: Alignment.centerLeft,
-                                child: Text('Descripción del Streaming',
+                                child: Text(widget.descr??'',
                                     style: TextStyle(
                                       fontFamily: 'Roboto',
                                       fontWeight: FontWeight.w400,

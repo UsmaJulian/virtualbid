@@ -42,20 +42,20 @@ class _HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
   TabController _tabController;
   String videoID;
+  String videoTitle;
+  String videoDescr;
   Stream<QuerySnapshot> stream;
   String args;
   File _avatarImage;
   final picker = ImagePicker();
   @override
   void initState() {
-    final pushProvider = PushNotificationProvider();
+    final pushProvider = new PushNotificationProvider();
     pushProvider.initNotifications();
+
     pushProvider.messages.listen((data) {
-      print('Argumento de la notificación');
+      print('Argumento del Push');
       print(data);
-      setState(() {
-        args = data;
-      });
     });
     _tabController = new TabController(
       length: 4,
@@ -86,6 +86,8 @@ class _HomePageState extends State<HomePage>
       if (mapDatos['items'] != null && mapDatos['items'].isNotEmpty) {
         setState(() {
           videoID = '${mapDatos['items'][0]['id']['videoId']}';
+          videoTitle='${mapDatos['items'][0]['id']['title']}';
+          videoDescr='${mapDatos['items'][0]['id']['description']}';
         });
       }
 
@@ -409,9 +411,7 @@ class _HomePageState extends State<HomePage>
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => MessagesPage(
-                                            args: args,
-                                          )));
+                                      builder: (context) => MessagesPage()));
                             },
                           ),
                           Center(
@@ -528,6 +528,8 @@ class _HomePageState extends State<HomePage>
             LivePage(
               userInfo: widget.userInfo,
               id: videoID,
+              title:videoTitle,
+              descr:videoDescr
             ),
             CalendarPage(
               userID: widget.userID,

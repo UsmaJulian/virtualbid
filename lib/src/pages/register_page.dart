@@ -11,6 +11,7 @@ import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
 import 'package:virtualbidapp/src/models/user_model.dart';
 import 'package:virtualbidapp/src/widgets/show_dialog.dart';
+import 'package:virtualbidapp/src/widgets/show_dialog_reg.dart';
 
 class RegisterPage extends StatefulWidget {
   final userID;
@@ -265,9 +266,9 @@ class _RegisterPageState extends State<RegisterPage> {
                                           padding: const EdgeInsets.all(8.0),
                                           child: Text(
                                             'Teléfono: ' +
-                                                snapshot.data
-                                                    .documents[index]['phone']
-                                                    .toString(),
+                          (snapshot.data
+                                                    .documents[index]['phone']??' teléfono necesario'
+                                                    .toString()),
                                           ),
                                         ),
                                         IconButton(
@@ -337,7 +338,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                                 snapshot
                                                     .data
                                                     .documents[index]
-                                                        ['identityCard']
+                                                        ['identityCard']??'Documento necesario'
                                                     .toString(),
                                           ),
                                         ),
@@ -651,6 +652,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                                     .getDownloadURL())
                                                 .toString()
                                           });
+                                          showdialogReg(context,widget.userID);
                                         } else {
                                           showdialogVisitados(context);
                                         }

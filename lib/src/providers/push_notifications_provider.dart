@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:io';
-
+import 'package:flutter/material.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
 class PushNotificationProvider {
@@ -11,40 +11,30 @@ class PushNotificationProvider {
   Stream<String> get messages => _messageStreamController.stream;
 
   initNotifications() {
-    _firebaseMessaging.requestNotificationPermissions();
+    _firebaseMessaging.requestNotificationPermissions(
+        const IosNotificationSettings(
+            sound: true, badge: true, alert: true, provisional: true));
 
     _firebaseMessaging.getToken().then((token) {
+      assert(token != null);
       print('======FCM==============');
       print(token);
       // cbqa8w0TSSOoJz0zS9FEhz:APA91bEFE151eLlHkb-bc_NwtxllnF5oAOc5MlvYrEqivFUAtjQ9WHjAUKHPIVDl8MQSHoBcoxPvDV_lvhnka2GqCiw_I4GVRSpS6Avm-fQvhWo_FlGFzcN5lcmU8WSlVpdyMe1DyRCb
     });
     _firebaseMessaging.configure(
-      //App in foreground
-      onMessage: (message) async {
-        print('=================== On Message==================');
-        print(message);
-        String args = 'no-data';
-        if (Platform.isAndroid) {
-          args = message['data']['llave'] ?? 'no-data';
-        }
-        _messageStreamController.sink.add(args);
+      onMessage: (Map<String, dynamic> message) async {
+        print("onMessage: $message");
       },
-      //App Terminated
-      onLaunch: (message) async {
-        print('=================== On Launch==================');
-        print(message);
+      onLaunch: (Map<String, dynamic> message) async {
+        print("onLaunch: $message");
       },
-
-      //App in Background
-      onResume: (message) async {
-        print('=================== On Resume==================');
-        print(message);
-        final notificacion = message['data']['llave'];
-        print(notificacion);
-        _messageStreamController.sink.add(notificacion);
+      onResume: (Map<String, dynamic> message) async {
+        print("onResume: $message");
       },
     );
   }
+
+  void _navigateToItemDetail(Map<String, dynamic> message) {}
 
   dispose() {
     _messageStreamController?.close();
