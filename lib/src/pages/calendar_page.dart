@@ -183,7 +183,7 @@ class _CalendarPageState extends State<CalendarPage> {
 
                                         },
                                         child: Text(
-                                          'Registrarse',
+                                          'Registro',
                                           style: TextStyle(
                                             color: Color(0xff005549),
                                           ),
