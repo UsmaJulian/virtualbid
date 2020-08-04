@@ -1,3 +1,4 @@
+import 'package:apple_sign_in/apple_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -61,6 +62,44 @@ class AuthService with ChangeNotifier {
     return null;
   }
 
+  Future<FirebaseUser> handleAppleSignIn() async {
+    _status = AuthStatus.Authenticating;
+    notifyListeners();
+    final AuthorizationResult result = await AppleSignIn.performRequests([
+      AppleIdRequest(requestedScopes: [Scope.email, Scope.fullName])
+    ]);
+    switch (result.status) {
+      case AuthorizationStatus.authorized:
+        try {
+          print("successfull sign in");
+          final AppleIdCredential appleIdCredential = result.credential;
+          OAuthProvider oAuthProvider =
+              new OAuthProvider(providerId: "apple.com");
+          final AuthCredential credential = oAuthProvider.getCredential(
+            idToken: String.fromCharCodes(appleIdCredential.identityToken),
+            accessToken:
+                String.fromCharCodes(appleIdCredential.authorizationCode),
+          );
+          AuthResult authResult =
+              await FirebaseAuth.instance.signInWithCredential(credential);
+          FirebaseUser user = authResult.user;
+          await updateUserData(user);
+        } catch (e) {
+          print("error");
+          _status = AuthStatus.Uninitialized;
+          notifyListeners();
+        }
+        break;
+      case AuthorizationStatus.error:
+        print('User auth error');
+        break;
+      case AuthorizationStatus.cancelled:
+        print('User cancelled');
+        break;
+    }
+    return null;
+  }
+
   Future<DocumentSnapshot> updateUserData(FirebaseUser user) async {
     DocumentReference userRef = _db.collection('users').document(user.uid);
     userRef.setData({
@@ -81,7 +120,6 @@ class AuthService with ChangeNotifier {
     String password,
     String name,
     String phone,
-    String identityCard,
     int paddle,
   ) async {
     _status = AuthStatus.Authenticating;
@@ -96,7 +134,6 @@ class AuthService with ChangeNotifier {
       await _db.collection('users').document(user.uid).updateData({
         'displayName': name,
         'phone': phone,
-        'identityCard': identityCard,
       });
 
       notifyListeners();

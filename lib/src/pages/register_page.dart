@@ -266,9 +266,10 @@ class _RegisterPageState extends State<RegisterPage> {
                                           padding: const EdgeInsets.all(8.0),
                                           child: Text(
                                             'Teléfono: ' +
-                          (snapshot.data
-                                                    .documents[index]['phone']??' teléfono necesario'
-                                                    .toString()),
+                                                (snapshot.data.documents[index]
+                                                        ['phone'] ??
+                                                    ' teléfono necesario'
+                                                        .toString()),
                                           ),
                                         ),
                                         IconButton(
@@ -327,77 +328,6 @@ class _RegisterPageState extends State<RegisterPage> {
                                             }),
                                       ],
                                     ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: <Widget>[
-                                        Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Text(
-                                            'NIT./Cédula: ' +
-                                                snapshot
-                                                    .data
-                                                    .documents[index]
-                                                        ['identityCard']??'Documento necesario'
-                                                    .toString(),
-                                          ),
-                                        ),
-                                        IconButton(
-                                            icon: Icon(
-                                              FontAwesomeIcons.solidEdit,
-                                              size: 16,
-                                              color: Color(0xff005549),
-                                            ),
-                                            onPressed: () {
-                                              showDialog(
-                                                  context: context,
-                                                  builder:
-                                                      (BuildContext context) {
-                                                    return AlertDialog(
-                                                      title: Text(
-                                                          "Cambiar mi NIT. o Cédula"),
-                                                      content: TextFormField(
-                                                        controller: _controller,
-                                                      ),
-                                                      actions: <Widget>[
-                                                        FlatButton(
-                                                          child:
-                                                              Text("Cancelar"),
-                                                          onPressed: () {
-                                                            Navigator.pop(
-                                                                context,
-                                                                _controller
-                                                                    .clear());
-                                                          },
-                                                        ),
-                                                        FlatButton(
-                                                          child:
-                                                              Text("Aceptar"),
-                                                          onPressed: () async {
-                                                            await Firestore
-                                                                .instance
-                                                                .collection(
-                                                                    'users')
-                                                                .document(widget
-                                                                    .userID)
-                                                                .updateData({
-                                                              'identityCard':
-                                                                  _controller
-                                                                      .text
-                                                                      .toString()
-                                                            });
-                                                            Navigator.pop(
-                                                                context,
-                                                                _controller
-                                                                    .text);
-                                                          },
-                                                        )
-                                                      ],
-                                                    );
-                                                  });
-                                            }),
-                                      ],
-                                    )
                                   ],
                                 ),
                               ),
@@ -652,7 +582,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                                     .getDownloadURL())
                                                 .toString()
                                           });
-                                          showdialogReg(context,widget.userID);
+                                          showdialogReg(context, widget.userID);
                                         } else {
                                           showdialogVisitados(context);
                                         }

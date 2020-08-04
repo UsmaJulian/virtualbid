@@ -8,7 +8,7 @@ class User with ChangeNotifier {
   String photoUrl;
   String email;
   String phone;
-  String identityCard;
+
   int paddle;
 
   User(
@@ -17,7 +17,6 @@ class User with ChangeNotifier {
       this.photoUrl,
       this.email,
       this.phone,
-      this.identityCard,
       this.paddle});
 
   factory User.fromFirestore(DocumentSnapshot userDoc) {
@@ -28,7 +27,6 @@ class User with ChangeNotifier {
       photoUrl: userData['photoUrl'],
       email: userData['email'],
       phone: userData['phone'],
-      identityCard: userData['identityCard'],
       paddle: userData['paddle'],
     );
   }
@@ -40,7 +38,7 @@ class User with ChangeNotifier {
     this.photoUrl = userData['photoUrl'];
     this.email = userData['email'];
     this.phone = userData['phone'];
-    this.identityCard = userData['identityCard'];
+
     this.paddle = userData['paddle'];
     notifyListeners();
   }
