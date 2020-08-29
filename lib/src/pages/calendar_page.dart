@@ -1,23 +1,14 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:intl/intl.dart';
-
 import 'package:table_calendar/table_calendar.dart';
 import 'package:virtualbidapp/src/models/event_model.dart';
 import 'package:virtualbidapp/src/pages/more_info_page.dart';
-
-import 'package:virtualbidapp/src/pages/register_page.dart';
-
+import 'package:virtualbidapp/src/pages/optional_register_page.dart';
 import 'package:virtualbidapp/src/services/event_firestore_service.dart';
 
 class CalendarPage extends StatefulWidget {
-  final userID;
-  final userInfo;
-
-  const CalendarPage({@required this.userID, this.userInfo});
-
   @override
   _CalendarPageState createState() => _CalendarPageState();
 }
@@ -118,82 +109,80 @@ class _CalendarPageState extends State<CalendarPage> {
                       calendarController: _controller,
                     ),
                     ..._selectedEvents.map((event) => Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: <Widget>[
                             Padding(
                               padding: const EdgeInsets.all(20.0),
-                              child: Center(child: Text('Toca el evento para guardar o registrarse.'),),
-                            ),
-                            ListTile(
-                              leading: Image.network(event.imageEvent),
-                              title: Text(
-                                event.title,
-                                style: TextStyle(color: Colors.black),
+                              child: Center(
+                                child: Text(
+                                  'Toca el evento para registrarte:',
+                                  style: TextStyle(fontSize: 18),
+                                ),
                               ),
-                              onTap: () {
-                                var fecha = DateFormat.yMMMMd('es')
-                                    .format(event.eventDate);
-                                showDialog(
-                                  context: context,
-                                  builder: (context) => AlertDialog(
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(16.0)),
-                                    ),
-                                    title: Text('Evento para el día: $fecha'),
-                                    actions: [
-                                      FlatButton(
-                                        onPressed: () {
-                                          Navigator.pop(context);
-                                        },
-                                        child: Text(
-                                          'Cancelar',
-                                          style: TextStyle(color: Colors.red),
-                                        ),
+                            ),
+                            Container(
+                              padding: EdgeInsets.all(10),
+                              margin: EdgeInsets.symmetric(
+                                  vertical: 15.0, horizontal: 20),
+                              decoration: BoxDecoration(
+                                border: Border.all(),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(25.0)),
+                              ),
+                              child: ListTile(
+                                leading: Image.network(event.imageEvent),
+                                title: Text(
+                                  event.title,
+                                  style: TextStyle(color: Colors.black),
+                                ),
+                                onTap: () {
+                                  var fecha = DateFormat.yMMMMd('es')
+                                      .format(event.eventDate);
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) => AlertDialog(
+                                      actionsPadding: EdgeInsets.all(10.0),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(16.0)),
                                       ),
-                                      FlatButton(
-                                        onPressed: () {
-                                          _saveDate(
-                                              title: event.title,
-                                              description: event.description,
-                                              event_date: event.eventDate);
-                                          Navigator.pop(context);
-                                        },
-                                        child: Text(
-                                          'Guardar',
-                                          style: TextStyle(
-                                              color: Color(0xff568a00)),
-                                        ),
-                                      ),
-                                      FlatButton(
-                                        onPressed: () {
-                                          print('tap');
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      RegisterPage(
-                                                        userID: widget.userID,
-                                                        userInfo:
-                                                            widget.userInfo,
-                                                        eventDate:
-                                                            event.eventDate,
-                                                        eventTitle: event.title,
-                                                      )));
-
-                                        },
-                                        child: Text(
-                                          'Registro',
-                                          style: TextStyle(
-                                            color: Color(0xff005549),
+                                      title:
+                                          Text('Evento para el día: $fecha '),
+                                      actions: [
+                                        FlatButton(
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                          child: Text(
+                                            'Cancelar ',
+                                            style: TextStyle(color: Colors.red),
                                           ),
                                         ),
-                                      )
-                                    ],
-                                    content: Text(event.description),
-                                  ),
-                                );
-                              },
+                                        FlatButton(
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        OptionalRegister()));
+                                          },
+                                          child: Text(
+                                            'Registro ',
+                                            style: TextStyle(
+                                              color: Color(0xff005549),
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                      content: Text(
+                                        event.description,
+                                        textAlign: TextAlign.justify,
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
                             ),
                             Column(
                               children: <Widget>[
@@ -207,7 +196,7 @@ class _CalendarPageState extends State<CalendarPage> {
                                             BorderRadius.circular(20.0),
                                       ),
                                       child: Text(
-                                        "Cargar pdf",
+                                        "Ver pdf del evento",
                                         style: TextStyle(color: Colors.white),
                                       ),
                                       onPressed: () {
@@ -217,7 +206,6 @@ class _CalendarPageState extends State<CalendarPage> {
                                                 builder: (context) =>
                                                     MoreInfoPage(
                                                       url: event.pdfUrl,
-                                                      userID: widget.userID,
                                                     )));
                                       }),
                                 ),
@@ -233,16 +221,16 @@ class _CalendarPageState extends State<CalendarPage> {
     );
   }
 
-  _saveDate({String title, String description, DateTime event_date}) {
-    return Firestore.instance
-        .collection('users')
-        .document(widget.userID)
-        .collection('personalevents')
-        .document()
-        .setData({
-      'title': title,
-      'description': description,
-      'event_date': event_date,
-    });
-  }
+//  _saveDate({String title, String description, DateTime event_date}) {
+//    return Firestore.instance
+//        .collection('users')
+//        .document(widget.userID)
+//        .collection('personalevents')
+//        .document()
+//        .setData({
+//      'title': title,
+//      'description': description,
+//      'event_date': event_date,
+//    });
+//  }
 }

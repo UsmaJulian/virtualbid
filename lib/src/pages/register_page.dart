@@ -72,7 +72,7 @@ class _RegisterPageState extends State<RegisterPage> {
             width: 500,
             height: MediaQuery.of(context).size.height * 0.9,
             child: StreamBuilder<QuerySnapshot>(
-                stream: Firestore.instance
+                stream: FirebaseFirestore.instance
                     .collection('users')
                     .where('uid', isEqualTo: widget.userID)
                     .snapshots(),
@@ -165,13 +165,13 @@ class _RegisterPageState extends State<RegisterPage> {
                                                           child:
                                                               Text("Aceptar"),
                                                           onPressed: () async {
-                                                            await Firestore
+                                                            await FirebaseFirestore
                                                                 .instance
                                                                 .collection(
                                                                     'users')
-                                                                .document(widget
+                                                                .doc(widget
                                                                     .userID)
-                                                                .updateData({
+                                                                .update({
                                                               'displayName':
                                                                   _controller
                                                                       .text
@@ -234,13 +234,13 @@ class _RegisterPageState extends State<RegisterPage> {
                                                           child:
                                                               Text("Aceptar"),
                                                           onPressed: () async {
-                                                            await Firestore
+                                                            await FirebaseFirestore
                                                                 .instance
                                                                 .collection(
                                                                     'users')
-                                                                .document(widget
+                                                                .doc(widget
                                                                     .userID)
-                                                                .updateData({
+                                                                .update({
                                                               'email':
                                                                   _controller
                                                                       .text
@@ -304,13 +304,13 @@ class _RegisterPageState extends State<RegisterPage> {
                                                           child:
                                                               Text("Aceptar"),
                                                           onPressed: () async {
-                                                            await Firestore
+                                                            await FirebaseFirestore
                                                                 .instance
                                                                 .collection(
                                                                     'users')
-                                                                .document(widget
+                                                                .doc(widget
                                                                     .userID)
-                                                                .updateData({
+                                                                .update({
                                                               'phone':
                                                                   _controller
                                                                       .text
@@ -505,10 +505,10 @@ class _RegisterPageState extends State<RegisterPage> {
                                           // Cancel your subscription when done.
                                           await uploadTask.onComplete;
                                           streamSubscription.cancel();
-                                          Firestore.instance
+                                          FirebaseFirestore.instance
                                               .collection('users')
-                                              .document(widget.userID)
-                                              .updateData({
+                                              .doc(widget.userID)
+                                              .update({
                                             "imageIdentityCard":
                                                 (await storageReference
                                                         .getDownloadURL())
@@ -540,10 +540,10 @@ class _RegisterPageState extends State<RegisterPage> {
                                           // Cancel your subscription when done.
                                           await uploadTask.onComplete;
                                           streamSubscription.cancel();
-                                          Firestore.instance
+                                          FirebaseFirestore.instance
                                               .collection('users')
-                                              .document(widget.userID)
-                                              .updateData({
+                                              .doc(widget.userID)
+                                              .update({
                                             "imageRut": (await storageReference
                                                     .getDownloadURL())
                                                 .toString()
@@ -574,10 +574,10 @@ class _RegisterPageState extends State<RegisterPage> {
                                           // Cancel your subscription when done.
                                           await uploadTask.onComplete;
                                           streamSubscription.cancel();
-                                          Firestore.instance
+                                          FirebaseFirestore.instance
                                               .collection('users')
-                                              .document(widget.userID)
-                                              .updateData({
+                                              .doc(widget.userID)
+                                              .update({
                                             "imagePay": (await storageReference
                                                     .getDownloadURL())
                                                 .toString()
@@ -604,10 +604,11 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-  _registerEvent({User usuario, DateTime event_date, String title}) {
-    return Firestore.instance.collection('paddles').document().setData({
+  // ignore: non_constant_identifier_names
+  _registerEvent({UserModel usuario, DateTime event_date, String title}) {
+    return FirebaseFirestore.instance.collection('paddles').doc().set({
       'users': FieldValue.arrayUnion([usuario.displayName])
-    }, merge: true).then((value) {
+    }, SetOptions(merge: true)).then((value) {
       Navigator.pop(context, true);
       showDialog(
           context: context,

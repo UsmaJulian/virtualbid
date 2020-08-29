@@ -1,6 +1,5 @@
 import 'dart:async';
-import 'dart:io';
-import 'package:flutter/material.dart';
+
 import 'package:firebase_messaging/firebase_messaging.dart';
 
 class PushNotificationProvider {
@@ -33,8 +32,6 @@ class PushNotificationProvider {
       },
     );
   }
-
-  void _navigateToItemDetail(Map<String, dynamic> message) {}
 
   dispose() {
     _messageStreamController?.close();

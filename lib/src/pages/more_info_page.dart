@@ -1,18 +1,20 @@
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'dart:io';
-import 'dart:typed_data';
-import 'package:path_provider/path_provider.dart';
 import 'package:http/http.dart' as http;
+import 'package:path_provider/path_provider.dart';
 import 'package:pdf_viewer_plugin/pdf_viewer_plugin.dart';
 import 'package:virtualbidapp/src/pages/home_page.dart';
 
 class MoreInfoPage extends StatefulWidget {
   final url;
-  final userID;
 
-  const MoreInfoPage({this.url, this.userID});
+  const MoreInfoPage({
+    this.url,
+  });
 
   @override
   _MoreInfoPageState createState() => _MoreInfoPageState();
@@ -87,13 +89,11 @@ class _MoreInfoPageState extends State<MoreInfoPage> {
                 color: Color(0xff005549),
               ),
               onPressed: () {
-                Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => HomePage(userID: widget.userID)));
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (context) => HomePage()));
               }),
           title: Text(
-            'Más información',
+            'Catálogo',
             style: TextStyle(
               fontFamily: 'Roboto',
               fontWeight: FontWeight.w700,
@@ -117,7 +117,7 @@ class _MoreInfoPageState extends State<MoreInfoPage> {
             else
               Center(
                   child: Padding(
-                padding: const EdgeInsets.only(top: 290.0),
+                padding: const EdgeInsets.only(top: 30.0),
                 child: CupertinoActivityIndicator(),
               ))
           ],

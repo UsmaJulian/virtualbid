@@ -1,18 +1,13 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:virtualbidapp/src/models/channel_model.dart';
 import 'package:virtualbidapp/src/models/video_model.dart';
 import 'package:virtualbidapp/src/pages/video_page.dart';
 import 'package:virtualbidapp/src/services/api_service.dart';
 import 'package:virtualbidapp/src/utilities/channelid_dart.dart';
-import 'package:auto_size_text/auto_size_text.dart';
 
 class VideosListPage extends StatefulWidget {
-  final userID;
-
-  const VideosListPage({@required this.userID});
   @override
   _VideosListPageState createState() => _VideosListPageState();
 }
@@ -28,7 +23,8 @@ class _VideosListPageState extends State<VideosListPage> {
   }
 
   _initChannel() async {
-    Channel channel = await APIService.instance.fetchChannel(channelId: Channel_Id);
+    Channel channel =
+        await APIService.instance.fetchChannel(channelId: Channel_Id);
     setState(() {
       _channel = channel;
     });
@@ -130,7 +126,6 @@ class _VideosListPageState extends State<VideosListPage> {
                     Container(
                       width: 160,
                       child: AutoSizeText(
-
                         'Titulo: ' + video.title,
                         minFontSize: 18,
                         maxLines: 4,
@@ -147,9 +142,7 @@ class _VideosListPageState extends State<VideosListPage> {
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                           color: Color(0xff005549),
-
                         ),
-
                       ),
                     ),
                   ],
@@ -158,22 +151,6 @@ class _VideosListPageState extends State<VideosListPage> {
             ),
           ),
         ),
-        Positioned(
-            right: 20,
-            bottom: 5,
-            child: IconButton(
-                icon: Icon(
-                  FontAwesomeIcons.solidHeart,
-                  color: Color(0xff005549),
-                ),
-                onPressed: () {
-                  print(video.id);
-                  Firestore.instance
-                      .collection('users')
-                      .document(widget.userID)
-                      .collection('favorites')
-                      .add({'favorites': video.id});
-                }))
       ],
     );
   }

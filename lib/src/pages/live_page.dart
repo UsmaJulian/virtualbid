@@ -2,32 +2,32 @@ import 'package:after_layout/after_layout.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-import 'package:virtualbidapp/src/models/user_model.dart';
-
+import 'package:virtualbidapp/src/pages/home_page.dart';
+import 'package:virtualbidapp/src/providers/paddle_provider.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class LivePage extends StatefulWidget {
   final String id;
-  final userInfo;
   final String title;
   final String descr;
 
-  const LivePage({this.id, this.userInfo, this.title, this.descr});
+  const LivePage({this.title, this.descr, this.id});
 
   @override
   _VideoScreenState createState() => _VideoScreenState();
 }
 
 class _VideoScreenState extends State<LivePage> with AfterLayoutMixin {
+  final UserPaddle _paddle = new UserPaddle();
   YoutubePlayerController _controller;
   String _initialVideoId;
+  String _paddleNumber;
 
   @override
   void initState() {
     super.initState();
     setState(() {
-      _initialVideoId = widget.id ;
+      _initialVideoId = widget.id;
     });
   }
 
@@ -46,6 +46,61 @@ class _VideoScreenState extends State<LivePage> with AfterLayoutMixin {
         isLive: true,
       ),
     );
+    if (_initialVideoId != null)
+      showDialog(
+        barrierDismissible: false,
+        context: (context),
+        builder: (BuildContext context) => AlertDialog(
+          title: Text('Bienvenido, '),
+          content: Container(
+            height: 100,
+            child: Column(
+              children: [
+                Text('Por favor ingresa tu número de paleta.'),
+                TextFormField(
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(
+                    labelText: 'Número de paleta',
+                  ),
+                  onChanged: (value) {
+                    setState(() {
+                      _paddleNumber = value;
+                    });
+                  },
+                  validator: (value) =>
+                      value.isEmpty ? 'ingresa tu número de paleta' : null,
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            FlatButton(
+                onPressed: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => HomePage()));
+                },
+                child: Text(
+                  'Cancelar',
+                  style: TextStyle(color: Colors.red),
+                )),
+            FlatButton(
+                onPressed: () {
+                  int numb = int.parse(_paddleNumber);
+                  _paddle.setpaleta = numb;
+
+                  setState(() {});
+                  Navigator.pop(context);
+                },
+                child: Text(
+                  'Aceptar',
+                  style: TextStyle(
+                    color: Color(0xff005549),
+                  ),
+                )),
+          ],
+        ),
+      );
+    setState(() {});
   }
 
   @override
@@ -60,31 +115,33 @@ class _VideoScreenState extends State<LivePage> with AfterLayoutMixin {
     return Scaffold(
       body: _initialVideoId != null
           ? StreamBuilder(
-              stream: Firestore.instance.collection('valuesbid').snapshots(),
+              stream: FirebaseFirestore.instance
+                  .collection('valuesbid')
+                  .snapshots(),
               builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                if (!snapshot.hasData || snapshot.data?.documents == null) {
+                if (!snapshot.hasData || snapshot.data?.docs == null) {
                   return Center(child: CupertinoActivityIndicator());
                 } else {
                   return ListView.builder(
                     physics: NeverScrollableScrollPhysics(),
-                    itemCount: snapshot.data.documents.length,
+                    itemCount: snapshot.data.docs.length,
                     itemBuilder: (BuildContext context, int index) {
                       return Container(
                         width: MediaQuery.of(context).size.width,
                         height: MediaQuery.of(context).size.height * 0.9,
                         child: Column(
                           children: <Widget>[
-//                            Container(
-//                                width: double.infinity,
-//                                height: 250,
-//                                color: Colors.black),
-                             YoutubePlayer(
-                               controller: _controller,
-                               showVideoProgressIndicator: true,
-                             ),
+                            // Container(
+                            //     width: double.infinity,
+                            //     height: 250,
+                            //     color: Colors.black),
+                            YoutubePlayer(
+                              controller: _controller,
+                              showVideoProgressIndicator: true,
+                            ),
                             Container(
                               padding: EdgeInsets.symmetric(vertical: 8.0),
-                              child: Text(widget.title??'',
+                              child: Text(widget.title ?? '',
                                   style: TextStyle(
                                     fontFamily: 'Roboto',
                                     fontWeight: FontWeight.w700,
@@ -96,7 +153,7 @@ class _VideoScreenState extends State<LivePage> with AfterLayoutMixin {
                                   vertical: 8.0, horizontal: 8.0),
                               child: Align(
                                 alignment: Alignment.centerLeft,
-                                child: Text(widget.descr??'',
+                                child: Text(widget.descr ?? '',
                                     style: TextStyle(
                                       fontFamily: 'Roboto',
                                       fontWeight: FontWeight.w400,
@@ -123,10 +180,8 @@ class _VideoScreenState extends State<LivePage> with AfterLayoutMixin {
                                     onPressed: () {
                                       _widgetOfertas(
                                           context: context,
-                                          userInfo: widget.userInfo,
-                                          documentFields: snapshot
-                                              .data.documents[index]['value']
-                                              .toString());
+                                          ofertaActual:
+                                              '${snapshot.data.docs[index].data()['value']}');
                                     }),
                               ),
                             ),
@@ -138,7 +193,7 @@ class _VideoScreenState extends State<LivePage> with AfterLayoutMixin {
                                 children: <Widget>[
                                   Text('Oferta Actual:'),
                                   Text(
-                                    '\$ ${snapshot.data.documents[index]['value']}',
+                                    '\$ ${snapshot.data.docs[index].data()['value']}',
                                     style: TextStyle(color: Color(0xff88ba25)),
                                   )
                                 ],
@@ -153,110 +208,86 @@ class _VideoScreenState extends State<LivePage> with AfterLayoutMixin {
               })
           : Center(
               child: Padding(
-              padding: const EdgeInsets.all(40.0),
+              padding: const EdgeInsets.all(30.0),
               child: Text(
                 'En este momento nos encontramos sin conexión, revisa nuestro calendario y registrate en los eventos para recibir notificaciones.',
                 textAlign: TextAlign.justify,
+                style: TextStyle(fontSize: 15),
               ),
             )),
     );
   }
 
-  _widgetOfertas(
-      {BuildContext context, User userInfo, String documentFields}) async {
+  _widgetOfertas({BuildContext context, String ofertaActual}) async {
+    print(_paddle.getpaleta);
+    int paleta = _paddle.getpaleta;
     return showDialog(
       barrierDismissible: false,
       context: context,
       builder: (BuildContext context) => StreamBuilder(
-        stream: Firestore.instance
-            .collection('paddles')
-            .where('users', arrayContains: userInfo.displayName.toString())
+        stream: FirebaseFirestore.instance
+            .collection('users')
+            .where('paddle', isEqualTo: paleta)
             .snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          if (snapshot.hasData && snapshot.data.documents.length > 0) {
-            return ListView.builder(
-              itemCount: snapshot.data.documents.length,
-              itemBuilder: (BuildContext context, int index) {
-                print(snapshot.data.documents.length);
+          if (snapshot.hasData) {
+            print(snapshot.data.docs.length);
+            print(snapshot.data.docs[0].data()['displayName']);
 
-                if (snapshot.data.documents.length > 0) {
-                  List<dynamic> info =
-                      snapshot.data.documents[index]['users'].toList();
-                  final idx = info.indexOf(userInfo.displayName.toString());
-                  final paddle = idx + 1;
-                  print('index :' + paddle.toString());
-                  return Padding(
-                    padding: const EdgeInsets.only(top: 220.0),
-                    child: AlertDialog(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(16.0)),
+            return Container(
+              child: AlertDialog(
+                title: Center(
+                    child: Text(snapshot.data.docs[0].data()['displayName'])),
+                content: Container(
+                  height: 50,
+                  child: Column(
+                    children: [
+                      Text('Tu numero de paleta es: $paleta '),
+                      SizedBox(
+                        height: 10,
                       ),
-                      title: Text('Oferta actual: ' + documentFields),
-                      actions: [
-                        FlatButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          child: Text(
-                            'Cancelar',
-                            style: TextStyle(color: Colors.red),
-                          ),
+                      Text('Tu oferta es de: $ofertaActual'),
+                    ],
+                  ),
+                ),
+                actions: [
+                  FlatButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: Text(
+                        'Cancelar',
+                        style: TextStyle(color: Colors.red),
+                      )),
+                  FlatButton(
+                      onPressed: () {
+                        FirebaseFirestore.instance
+                            .collection('offers')
+                            .doc(snapshot.data.docs[0].data()['displayName'])
+                            .set({
+                          "displayName":
+                              snapshot.data.docs[0].data()['displayName'],
+                          "offer": ofertaActual,
+                          "offerTime": DateTime.now(),
+                          "paddle": paleta,
+                        }, SetOptions(merge: false));
+                        Navigator.pop(context);
+                      },
+                      child: Text(
+                        'Ofertar',
+                        style: TextStyle(
+                          color: Color(0xff005549),
                         ),
-                        FlatButton(
-                          onPressed: () {
-                            Firestore.instance
-                                .collection('offers')
-                                .document('${widget.userInfo.id}')
-                                .setData(
-                              {
-                                "displayName": widget.userInfo.displayName,
-                                "offer": documentFields,
-                                "offerTime": DateTime.now(),
-                                "paddle": paddle.toString(),
-                                "uid": widget.userInfo.id
-                              },
-                            );
-                            Navigator.pop(context);
-                          },
-                          child: Text(
-                            'Ofertar',
-                            style: TextStyle(
-                                color: Color(
-                                  0xff005549,
-                                ),
-                                fontSize: 18),
-                          ),
-                        )
-                      ],
-                      content: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Text('Tú número de paleta es: ' + paddle.toString())
-                        ],
-                      ),
-                    ),
-                  );
-                }
-                return null;
-              },
+                      )),
+                ],
+              ),
+            );
+          } else {
+            Center(
+              child: CupertinoActivityIndicator(),
             );
           }
-          return AlertDialog( shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(
-                Radius.circular(16.0)),
-          ),
-            title: new Text("No te encuentras Registrado"),
-            content: new Text("Por favor registrate para ofertar "),
-            actions: <Widget>[
-              // usually buttons at the bottom of the dialog
-              new FlatButton(
-                child: new Text("Close"),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
+          return Container();
         },
       ),
     );

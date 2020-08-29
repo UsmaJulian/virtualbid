@@ -47,9 +47,9 @@ class _FavoritesPageState extends State<FavoritesPage> {
         ),
       ),
       body: StreamBuilder(
-        stream: Firestore.instance
+        stream: FirebaseFirestore.instance
             .collection('users')
-            .document(widget.userID)
+            .doc(widget.userID)
             .collection('favorites')
             .snapshots(),
         builder: (BuildContext context, AsyncSnapshot snapshot) {

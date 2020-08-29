@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:virtualbidapp/src/pages/home_page.dart';
 
-Future<void> showdialogReg(
-  BuildContext context,userID
-) {
+Future<void> showdialogReg(BuildContext context, userID) {
   return showDialog<void>(
       context: context,
       builder: (BuildContext context) {
@@ -19,7 +17,8 @@ Future<void> showdialogReg(
                 style: TextStyle(color: Colors.black),
               ),
               onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context)=>HomePage(userID: userID)));
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => HomePage()));
               },
             ),
           ],

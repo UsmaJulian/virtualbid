@@ -44,3 +44,4 @@ app.*.map.json
 
 #propierties
 key.properties
+/assets/llave/

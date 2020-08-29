@@ -1,13 +1,6 @@
-import 'dart:io';
-
-import 'package:device_info/device_info.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
-import 'package:provider/provider.dart';
 import 'package:virtualbidapp/src/pages/home_page.dart';
-import 'package:virtualbidapp/src/pages/signinup_page.dart';
-import 'package:virtualbidapp/src/services/auth_service.dart';
 import 'package:virtualbidapp/src/pages/password_renew.dart';
 
 class SignInPage extends StatefulWidget {
@@ -21,12 +14,13 @@ class _SignInPageState extends State<SignInPage> {
   final TextEditingController _passwordController = TextEditingController();
   bool _obscureText = true;
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  // ignore: unused_field
   String _email = '';
+  // ignore: unused_field
   String _password = '';
 
   @override
   Widget build(BuildContext context) {
-    final authService = Provider.of<AuthService>(context);
     return Scaffold(
         body: SingleChildScrollView(
       child: Form(
@@ -41,7 +35,7 @@ class _SignInPageState extends State<SignInPage> {
               width: 200,
             ),
             Text(
-              'Bienvenido',
+              'Bienvenido Administrador',
               style: TextStyle(
                   color: Color(0xff005549), fontWeight: FontWeight.w700),
             ),
@@ -61,7 +55,8 @@ class _SignInPageState extends State<SignInPage> {
                   }),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 40.0),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 40.0, vertical: 20.0),
               child: TextFormField(
                   controller: _passwordController,
                   obscureText: _obscureText,
@@ -118,55 +113,8 @@ class _SignInPageState extends State<SignInPage> {
                               builder: (context) => PasswordRenew()));
                     },
                     child: Text('Olvidaste tu contraseña?')),
-                Row(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: <Widget>[
-                    Text('Aún no tienes Cuenta? '),
-                    FlatButton(
-                      padding: EdgeInsets.zero,
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => SignInUpPage()),
-                        );
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.only(right: 16.0),
-                        child: Text('Puedes registrarte!',
-                            style: TextStyle(color: Color(0xff88ba25))),
-                      ),
-                    ),
-                  ],
-                ),
               ],
             ),
-            Center(
-              child: Container(
-                margin: EdgeInsets.only(bottom: 10.0),
-                child: GoogleSignInButton(
-                  text: 'Inicia Sesión con Google',
-                  borderRadius: 20.0,
-                  onPressed: () async {
-                    await authService.googleSignIn();
-                  },
-                ),
-              ),
-            ),
-            if (Platform.isIOS)
-              Center(
-                child: Container(
-                  margin: EdgeInsets.only(bottom: 90.0),
-                  child: AppleSignInButton(
-                    text: 'Inicia Sesión con Apple',
-                    borderRadius: 20.0,
-                    onPressed: () async {
-                      await authService.handleAppleSignIn();
-                    },
-                  ),
-                ),
-              ),
           ],
         ),
       ),
@@ -174,17 +122,13 @@ class _SignInPageState extends State<SignInPage> {
   }
 
   void _signInWithEmailAndPassword() async {
-    final FirebaseUser user = (await _auth.signInWithEmailAndPassword(
+    // ignore: unused_local_variable
+    final User user = (await _auth.signInWithEmailAndPassword(
       email: _emailController.text,
       password: _passwordController.text,
     ))
         .user;
     Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => HomePage(
-                  userID: user.uid,
-                  userInfo: user,
-                )));
+        context, MaterialPageRoute(builder: (context) => HomePage()));
   }
 }

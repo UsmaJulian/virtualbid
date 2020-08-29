@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:virtualbidapp/src/models/event_model.dart';
 import 'package:virtualbidapp/src/services/event_firestore_service.dart';
 
@@ -34,8 +35,33 @@ class _AddEventPageState extends State<AddEventPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.note != null ? "Editar evento" : "agregar evento"),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(60.0),
+        child: AppBar(
+          centerTitle: true,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(
+              bottom: Radius.circular(25),
+            ),
+          ),
+          backgroundColor: Color(0xff88ba25),
+          automaticallyImplyLeading: false,
+          leading: IconButton(
+              icon: Icon(
+                FontAwesomeIcons.angleLeft,
+                color: Color(0xff005549),
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+              }),
+          title: Text(
+            'Agregar evento',
+            style: TextStyle(
+                fontFamily: 'Roboto',
+                fontWeight: FontWeight.w700,
+                color: Color(0xff005549)),
+          ),
+        ),
       ),
       key: _key,
       body: Form(

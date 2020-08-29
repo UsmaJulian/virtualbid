@@ -1,8 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-
-class User with ChangeNotifier {
+class UserModel with ChangeNotifier {
   String id;
   String displayName;
   String photoUrl;
@@ -11,7 +10,7 @@ class User with ChangeNotifier {
 
   int paddle;
 
-  User(
+  UserModel(
       {this.id,
       this.displayName,
       this.photoUrl,
@@ -19,10 +18,10 @@ class User with ChangeNotifier {
       this.phone,
       this.paddle});
 
-  factory User.fromFirestore(DocumentSnapshot userDoc) {
-    Map userData = userDoc.data;
-    return User(
-      id: userDoc.documentID,
+  factory UserModel.fromFirestore(DocumentSnapshot userDoc) {
+    Map userData = userDoc.data();
+    return UserModel(
+      id: userDoc.id,
       displayName: userData['displayName'],
       photoUrl: userData['photoUrl'],
       email: userData['email'],
@@ -32,8 +31,8 @@ class User with ChangeNotifier {
   }
 
   void setFromFireStore(DocumentSnapshot userDoc) {
-    Map userData = userDoc.data;
-    this.id = userDoc.documentID;
+    Map userData = userDoc.data();
+    this.id = userDoc.id;
     this.displayName = userData['displayName'];
     this.photoUrl = userData['photoUrl'];
     this.email = userData['email'];

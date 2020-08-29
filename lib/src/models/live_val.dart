@@ -1,11 +1,14 @@
+// ignore: camel_case_types
 class Live_val {
   final String videoId;
   final String publishId;
   final String channelId;
   final String title;
   final String description;
+  // ignore: non_constant_identifier_names
   final String url_image;
   final String channelTitle;
+  // ignore: non_constant_identifier_names
   final String LiveBroadCastcontent;
 
   Live_val(
@@ -14,8 +17,10 @@ class Live_val {
       this.channelId,
       this.title,
       this.description,
+      // ignore: non_constant_identifier_names
       this.url_image,
       this.channelTitle,
+      // ignore: non_constant_identifier_names
       this.LiveBroadCastcontent});
 
   factory Live_val.fromJson(Map<String, dynamic> json) {

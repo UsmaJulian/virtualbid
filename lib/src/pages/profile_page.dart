@@ -50,7 +50,7 @@ class _ProfilePageState extends State<ProfilePage> {
             width: 500,
             height: MediaQuery.of(context).size.height * 0.9,
             child: StreamBuilder<QuerySnapshot>(
-                stream: Firestore.instance
+                stream: FirebaseFirestore.instance
                     .collection('users')
                     .where('uid', isEqualTo: widget.userID)
                     .snapshots(),
@@ -167,13 +167,13 @@ class _ProfilePageState extends State<ProfilePage> {
                                                           child:
                                                               Text("Aceptar"),
                                                           onPressed: () async {
-                                                            await Firestore
+                                                            await FirebaseFirestore
                                                                 .instance
                                                                 .collection(
                                                                     'users')
-                                                                .document(widget
+                                                                .doc(widget
                                                                     .userID)
-                                                                .updateData({
+                                                                .update({
                                                               'displayName':
                                                                   _controller
                                                                       .text
@@ -236,13 +236,13 @@ class _ProfilePageState extends State<ProfilePage> {
                                                           child:
                                                               Text("Aceptar"),
                                                           onPressed: () async {
-                                                            await Firestore
+                                                            await FirebaseFirestore
                                                                 .instance
                                                                 .collection(
                                                                     'users')
-                                                                .document(widget
+                                                                .doc(widget
                                                                     .userID)
-                                                                .updateData({
+                                                                .update({
                                                               'email':
                                                                   _controller
                                                                       .text
@@ -305,13 +305,13 @@ class _ProfilePageState extends State<ProfilePage> {
                                                           child:
                                                               Text("Aceptar"),
                                                           onPressed: () async {
-                                                            await Firestore
+                                                            await FirebaseFirestore
                                                                 .instance
                                                                 .collection(
                                                                     'users')
-                                                                .document(widget
+                                                                .doc(widget
                                                                     .userID)
-                                                                .updateData({
+                                                                .update({
                                                               'phone':
                                                                   _controller
                                                                       .text
