@@ -11,7 +11,7 @@ import 'package:virtualbidapp/src/pages/live_page.dart';
 import 'package:virtualbidapp/src/pages/messages_page.dart';
 import 'package:virtualbidapp/src/pages/settings_page.dart';
 import 'package:virtualbidapp/src/pages/videosList_page.dart';
-import 'package:virtualbidapp/src/providers/push_notifications_provider.dart';
+
 import 'package:virtualbidapp/src/utilities/channelid_dart.dart';
 import 'package:virtualbidapp/src/utilities/key.dart';
 
@@ -32,13 +32,6 @@ class _HomePageState extends State<HomePage>
   final picker = ImagePicker();
   @override
   void initState() {
-    final pushProvider = new PushNotificationProvider();
-    pushProvider.initNotifications();
-
-    pushProvider.messages.listen((data) {
-      print('Argumento del Push');
-      print(data);
-    });
     _tabController = new TabController(
       length: 3,
       vsync: this,

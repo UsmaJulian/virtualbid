@@ -3,8 +3,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:virtualbidapp/src/pages/messages_page.dart';
 import 'package:virtualbidapp/src/pages/welcome_page.dart';
 import 'package:virtualbidapp/src/providers/paddle_provider.dart';
+import 'package:virtualbidapp/src/providers/push_notifications_provider.dart';
 
 // ignore: non_constant_identifier_names
 bool USE_FIRESTORE_EMULATOR = false;
@@ -28,8 +30,17 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  final GlobalKey<NavigatorState> navigatorKey =
+      new GlobalKey<NavigatorState>();
   @override
   void initState() {
+    final pushProvider = new PushNotificationsProvider();
+    pushProvider.intiNotifications();
+    pushProvider.mensajesStream.listen((argumento) {
+      print('argumento en el main: $argumento');
+      // Navigator.pushNamed(context, 'message');
+      navigatorKey.currentState.pushNamed('message', arguments: argumento);
+    });
     initPlatformState();
     super.initState();
   }
@@ -41,6 +52,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      navigatorKey: navigatorKey,
       debugShowCheckedModeBanner: false,
       title: 'Virtual Bid',
       theme: ThemeData(
@@ -53,7 +65,10 @@ class _MyAppState extends State<MyApp> {
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       initialRoute: '/',
-      routes: {'/': (BuildContext context) => WelcomePage()},
+      routes: {
+        '/': (BuildContext context) => WelcomePage(),
+        'message': (BuildContext context) => MessagesPage(),
+      },
     );
   }
 }

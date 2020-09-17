@@ -9,6 +9,7 @@ class MessagesPage extends StatefulWidget {
 class _MessagesPageState extends State<MessagesPage> {
   @override
   Widget build(BuildContext context) {
+    final arg = ModalRoute.of(context).settings.arguments;
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(60.0),
@@ -38,10 +39,7 @@ class _MessagesPageState extends State<MessagesPage> {
           ),
         ),
       ),
-      body: Center(
-          child: 'widget.args' != null
-              ? Text('widget.args')
-              : Text('No tienes mensajes')),
+      body: Center(child: arg != null ? Text(arg) : Text('No tienes mensajes')),
     );
   }
 }
